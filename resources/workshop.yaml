@@ -10,7 +10,7 @@ spec:
   duration: 15m
   url: https://github.com/everythingeverywhere/lab-df
   content:
-    image: quay.io/eduk8s/jdk11-environment:*
+    image: quay.io/eduk8s/jdk11-environment:latest
     files: github.com/everythingeverywhere/lab-df
   session:
     namespaces:

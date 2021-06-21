@@ -6,7 +6,7 @@ Included below are some tests and examples of page formatting using Markdown.
 
 #### Download the Spring Cloud Data Flow source code
 
-```execute-q
+```execute-1
 git clone https://github.com/spring-cloud/spring-cloud-dataflow
 cd spring-cloud-dataflow
 git checkout main
