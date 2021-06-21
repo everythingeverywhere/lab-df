@@ -11,7 +11,7 @@ spec:
   url: https://github.com/everythingeverywhere/lab-df
   content:
     image: quay.io/eduk8s/jdk11-environment:*
-    files: github.com/everythingeverywhere/lab-df
+    files: imgpkg+$(ingress_protocol)://$(registry_username):$(registry_password)@$(registry_host)/workshop-content:latest
   session:
     namespaces:
       budget: small
