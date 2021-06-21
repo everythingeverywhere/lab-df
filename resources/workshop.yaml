@@ -11,15 +11,19 @@ spec:
   url: https://github.com/everythingeverywhere/lab-df
   content:
     image: quay.io/eduk8s/jdk11-environment:*
-    files: imgpkg+$(ingress_protocol)://$(registry_username):$(registry_password)@$(registry_host)/workshop-content:latest
+    files: github.com/everythingeverywhere/lab-df
   session:
     namespaces:
-      budget: small
+      budget: large
     applications:
       terminal:
         enabled: true
         layout: split
-      console:
-        enabled: true
       editor:
+        enabled: true
+      examiner:
+        enabled: true
+      docker:
+        enabled: true
+      registry:
         enabled: true
