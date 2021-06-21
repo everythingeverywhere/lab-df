@@ -8,6 +8,7 @@ spec:
       type: anonymous
   workshops:
   - name: lab-markdown-sample
+    reserved: 0
     capacity: 1
     expires: 60m
     orphaned: 5m

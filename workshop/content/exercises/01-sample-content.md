@@ -4,10 +4,12 @@ In this example the pages which make up the core of the workshop content are pla
 
 Included below are some tests and examples of page formatting using Markdown.
 
-#### Standard code block
+#### Download the Spring Cloud Data Flow source code
 
-```
-echo "standard code block"
+```execute-q
+git clone https://github.com/spring-cloud/spring-cloud-dataflow
+cd spring-cloud-dataflow
+git checkout main
 ```
 
 #### Click text to execute
