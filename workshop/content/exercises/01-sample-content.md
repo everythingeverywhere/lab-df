@@ -12,62 +12,120 @@ cd spring-cloud-dataflow
 git checkout main
 ```
 
-#### Click text to execute
+```execute-2
+# Choose message broker rabbitmq vs kafka
+kubectl create -f ~/spring-cloud-dataflow/src/kubernetes/rabbitmq/
+# to verify
+kubectl get all -l app=rabbitmq
 
-```execute
-echo "execute in terminal 1"
+
+# Deploy Services, Skipper, and Data Flow
+
+# Deploy MySQL
+kubectl create -f ~/spring-cloud-dataflow/src/kubernetes/mysql
+
+#Create Data Flow Role Bindings and Service Account
+kubectl create -f ~/spring-cloud-dataflow/src/kubernetes/server/server-roles.yaml
+kubectl create -f ~/spring-cloud-dataflow/src/kubernetes/server/server-rolebinding.yaml
+kubectl create -f ~/spring-cloud-dataflow/src/kubernetes/server/service-account.yaml
+
+#To use RabbitMQ as the messaging middleware, run the following command
+kubectl create -f ~/spring-cloud-dataflow/src/kubernetes/skipper/skipper-config-rabbit.yaml
+```
+--skipper
+
+Select text to change
+```editor:select-matching-text
+file: ~/spring-cloud-dataflow/src/kubernetes/skipper/skipper-svc.yaml
+text: "LoadBalancer"
 ```
 
-#### Click text to execute (with target)
-
-```execute-1
-echo "execute in terminal 1"
+```editor:replace-text-selection
+file: ~/spring-cloud-dataflow/src/kubernetes/skipper/skipper-svc.yaml
+text: ClusterIP
 ```
 
 ```execute-2
-echo "execute in terminal 2"
+kubectl apply -f ~/spring-cloud-dataflow/src/kubernetes/skipper/skipper-svc.yaml
+kubectl create -f ~/spring-cloud-dataflow/src/kubernetes/skipper/skipper-deployment.yaml
 ```
 
-```execute-all
-echo "execute in all terminals"
+Click below to create your `ingress.yaml`.
+```editor:append-lines-to-file
+file: ~/ingress-skipper.yaml
+text: |
+      apiVersion: networking.k8s.io/v1
+      kind: Ingress
+      metadata:
+        name: skipper
+        labels:
+          app: skipper
+      spec:
+        rules:
+        - host: skipper-{{ session_namespace }}.{{ ingress_domain }}
+          http:
+            paths:
+            - path: "/"
+              pathType: Prefix
+              backend:
+                service:
+                  name: skipper
+                  port: 
+                    number: 80
 ```
 
-#### Click text to copy
-
-```copy
-echo "copy text to buffer"
+Now, apply the `ingress.yaml`.
+```execute-2
+kubectl apply -f ~/ingress-skipper.yaml
 ```
 
-#### Click text to copy (and edit)
+---scdf
 
-```copy-and-edit
-echo "copy text to buffer"
+Select text to change
+```editor:select-matching-text
+file: ~/spring-cloud-dataflow/src/kubernetes/server/server-svc.yaml
+text: "LoadBalancer"
 ```
 
-#### Interrupt command
-
-```execute
-sleep 3600
+```editor:replace-text-selection
+file: ~/spring-cloud-dataflow/src/kubernetes/server/server-svc.yaml
+text: ClusterIP
 ```
 
-```execute
-<ctrl-c>
+Click below to create your `ingress.yaml`.
+```editor:append-lines-to-file
+file: ~/ingress-scdf-server.yaml
+text: |
+      apiVersion: networking.k8s.io/v1
+      kind: Ingress
+      metadata:
+        name: scdf-server
+        labels:
+          app: scdf-server
+      spec:
+        rules:
+        - host: scdf-server-{{ session_namespace }}.{{ ingress_domain }}
+          http:
+            paths:
+            - path: "/"
+              pathType: Prefix
+              backend:
+                service:
+                  name: scdf-server
+                  port: 
+                    number: 80
 ```
 
-#### Variable interpolation
+Now, apply the `ingress.yaml`.
+```execute-2
+kubectl apply -f ~/ingress-scdf-server.yaml
+```
 
-workshop_name: {{ workshop_name }}
+```execute-2
+# To create the configuration map with the default settings, run the following command
+kubectl create -f ./spring-cloud-dataflow/src/kubernetes/server/server-config.yaml
 
-session_namespace: {{ session_namespace }}
-
-workshop_namespace: {{ workshop_namespace }}
-
-training_portal: {{ training_portal }}
-
-ingress_domain: {{ ingress_domain }}
-
-ingress_protocol: {{ ingress_protocol }}
-
-#### Web site links
-
-[External](https://github.com/eduk8s)
+#Now you need to create the server deployment
+kubectl create -f ./spring-cloud-dataflow/src/kubernetes/server/server-svc.yaml
+kubectl create -f ./spring-cloud-dataflow/src/kubernetes/server/server-deployment.yaml
+```

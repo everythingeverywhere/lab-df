@@ -1,7 +1,7 @@
 apiVersion: training.eduk8s.io/v1alpha2
 kind: Workshop
 metadata:
-  name: lab-markdown-sample
+  name: lab-df
 spec:
   title: Markdown Sample
   description: A sample workshop using Markdown
@@ -26,4 +26,6 @@ spec:
       docker:
         enabled: true
       registry:
+        enabled: true
+      console:
         enabled: true
